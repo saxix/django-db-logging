@@ -5,7 +5,7 @@ Django DB Logging
 .. image:: https://badge.fury.io/py/django-db-logging.png
     :target: http://badge.fury.io/py/django-db-logging
 
-.. image:: https://travis-ci.org/saxix/django-db-logging.png?branch=master
+.. image:: https://api.travis-ci.com/saxix/django-db-logging.png?branch=master
         :target: https://travis-ci.org/saxix/django-db-logging
 
 .. image:: https://pypip.in/d/django-db-logging/badge.png
