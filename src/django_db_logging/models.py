@@ -33,10 +33,15 @@ class RecordManager(models.Manager):
         cursor = connection.cursor()
         cursor.execute('TRUNCATE TABLE "{0}"'.format(self.model._meta.db_table))
 
-    def cleanup(self):
+    def cleanup(self, records_to_keep=None):
         with atomic():
-            keep = self.all().order_by('-id').values_list('id', flat=True)[:config.MAX_LOG_ENTRIES]
-            self.exclude(id__in=keep).delete()
+            if records_to_keep is None:
+                records_to_keep = config.MAX_LOG_ENTRIES
+            if records_to_keep > 0:
+                keep = self.all().order_by('-id').values_list('id', flat=True)[:records_to_keep]
+                self.exclude(id__in=keep).delete()
+            else:
+                self.truncate()
 
 
 class AbstractRecord(models.Model):
