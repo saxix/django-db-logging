@@ -1,0 +1,46 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_static admin_list admin_urls %}
+{% block extrahead %}{{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "django_db_logging/style.css" %}">
+{% endblock %}
+
+{% block object-tools-items %}
+{{ block.super }}
+{% include "django_db_logging/includes/change_form_buttons.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="record">
+    <div class="field"><span class="label">id</span><span class="value">{{ original.id }}</span></div>
+    <div class="field"><span class="label">Date</span><span class="value">{{ original.timestamp }}</span></div>
+    <div class="field"><span class="label">Level</span><span class="value badge {{ original.get_level_display }}">{{ original.get_level_display }}</span></div>
+    <div class="field"><span class="label">Message</span><span class="value">{{ original.message }}</span></div>
+    <div class="field"><span class="label">Logger</span><span class="value">{{ original.logger }}</span></div>
+    <div class="field"><span class="label">Filename</span><span class="value">{{ original.filename }}:{{ original.lineno }}</span>
+    </div>
+    <div class="field"><span class="label">Module</span><span class="value">{{ original.module }}</span></div>
+    <div class="field"><span class="label">Function</span><span class="value">{{ original.func_name }}()</span></div>
+
+    {% if original.extra %}
+        <h3>Extra args</h3>
+        {% for k,v in original.extras.items %}
+            <div class="field"><span class="label">{{k}}</span><span class="value">{{ v }}</span></div>
+        {% endfor %}
+    {% endif %}
+
+    {% if original.traceback %}
+    <div class="exception">
+        <div class="field"><span class="label">Exception</span><span class="value">{{ original.exc_type }}()</span>
+        </div>
+
+        <h3>Exception</h3>
+        <code>
+            <!--{{ original.exc_type }}-->
+            {{ original.traceback }}
+            <!--{{ original.extra }}-->
+        </code>
+    </div>
+    {% endif %}
+</div>
+<a href="../" class="button">Back</a>
+{% endblock content %}

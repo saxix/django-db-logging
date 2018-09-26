@@ -1,0 +1,18 @@
+include README
+include CHANGES
+include LICENSE
+include MANIFEST.in
+
+exclude Pipfile
+exclude Pipfile.lock
+exclude manage.py
+exclude .gitignore
+exclude Makefile
+exclude tox.ini
+
+recursive-include docs *
+recursive-include src/requirements *.pip
+recursive-include src/django_db_logger *
+
+prune tests
+prune .github
