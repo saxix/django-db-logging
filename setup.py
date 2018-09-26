@@ -36,6 +36,7 @@ setup(
     author_email='s.apostolico@gmail.com',
     license="MIT",
     description='Database logging handler with Django integration',
+    full_description=open("README.rst").read(),
     package_dir={'': 'src'},
     packages=find_packages('src'),
     include_package_data=True,
