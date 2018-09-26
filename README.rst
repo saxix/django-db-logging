@@ -105,6 +105,36 @@ running `django_db_logging.models.Record.objects.cleanup` to delete all but `con
 most recent lines
 
 
+Use custom models
+~~~~~~~~~~~~~~~~~
+
+It is possible to customize handlers to use dedicated Model::
+
+    from django_db_logging.models import AbstractRecord
+
+
+    class CustomLogger(AbstractRecord):
+        class Meta:
+            app_label = 'demo'
+
+and in your settings::
+
+    LOGGING = {
+        ...
+        'handlers': {
+            'db': {
+                'level': 'DEBUG',
+                'class': 'django_db_logging.handlers.AsyncDBHandler',
+                'model': 'demo.CustomLogger',
+            },
+
+        },
+        ...
+
+
+
+
+
 Links
 ~~~~~
 

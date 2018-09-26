@@ -66,10 +66,20 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'django_db_logging.handlers.DBHandler',
         },
+        'db-demo': {
+            'level': 'DEBUG',
+            'class': 'django_db_logging.handlers.DBHandler',
+            'model': 'demo.CustomLogger',
+        },
     },
     'loggers': {
         'django_db_logging': {
             'handlers': ['null', 'db'],
+            'propagate': True,
+            'level': 'DEBUG'
+        },
+        'demo': {
+            'handlers': ['db-demo'],
             'propagate': True,
             'level': 'DEBUG'
         }

@@ -142,8 +142,8 @@ class ThreadQueue:
 
 class ThreadLogger(ThreadQueue):
     def _process(self, record):
-        from django_db_logging.models import Record
-        Record.log_record(*record)
+        model, log_record, formatted = record
+        model.log_record(log_record, formatted)
 
 
 worker = ThreadLogger()

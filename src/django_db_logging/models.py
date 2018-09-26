@@ -9,6 +9,7 @@ from logging import LogRecord
 
 from django.db import models, connections
 from django.db.transaction import atomic
+from django_db_logging.handlers import DBHandler
 
 from .logging import logger
 from .settings import config
@@ -34,11 +35,11 @@ class RecordManager(models.Manager):
 
     def cleanup(self):
         with atomic():
-            keep = Record.objects.all().order_by('-id').values_list('id', flat=True)[:config.MAX_LOG_ENTRIES]
-            Record.objects.exclude(id__in=keep).delete()
+            keep = self.all().order_by('-id').values_list('id', flat=True)[:config.MAX_LOG_ENTRIES]
+            self.exclude(id__in=keep).delete()
 
 
-class Record(models.Model):
+class AbstractRecord(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     logger = models.CharField(max_length=200, blank=True, null=True, db_index=True)
     level = models.PositiveIntegerField(choices=LOG_LEVELS,
@@ -64,6 +65,7 @@ class Record(models.Model):
     class Meta:
         ordering = ("timestamp", "id")
         get_latest_by = 'id'
+        abstract = True
 
     objects = RecordManager()
 
@@ -74,8 +76,8 @@ class Record(models.Model):
     def extras(self):
         return json.loads(self.extra)
 
-    @staticmethod
-    def log_record(record: LogRecord, formatted: str = None):
+    @classmethod
+    def log_record(cls, record: LogRecord, formatted: str = None):
         try:
             exc_info = {}
             extras = {k: str(v) for k, v in record.__dict__.items() if k not in KNOWN_FIELDS}
@@ -97,7 +99,7 @@ class Record(models.Model):
                     except ImportError:
                         pass
 
-            Record.objects.create(
+            cls.objects.create(
                 timestamp=datetime.datetime.fromtimestamp(record.created),
                 logger=record.name,
                 level=record.levelno,
@@ -113,4 +115,12 @@ class Record(models.Model):
                 **exc_info
             )
         except Exception as e:
+            for hdlr in logger.handlers[:]:  # remove all old handlers
+                if isinstance(hdlr, DBHandler):
+                    logger.removeHandler(hdlr)
+            logger.handle(record)
             logger.exception(e)
+
+
+class Record(AbstractRecord):
+    pass
