@@ -122,14 +122,14 @@ Links
 | Documentation:     | https://django-db-logging.readthedocs.org/en/latest/   |
 +--------------------+---------------+--------------+-------------------------+
 
-.. |master-build| image:: https://secure.travis-ci.org/saxix/django-db-logging.png?branch=master
-                    :target: http://travis-ci.org/saxix/django-db-logging/
+.. |master-build| image:: https://api.travis-ci.com/saxix/django-db-logging.png?branch=master
+                    :target: http://travis-ci.com/saxix/django-db-logging/
 
 .. |master-cov| image:: https://codecov.io/gh/saxix/django-db-logging/branch/master/graph/badge.svg
                     :target: https://codecov.io/gh/saxix/django-db-logging
 
-.. |dev-build| image:: https://secure.travis-ci.org/saxix/django-db-logger.png?branch=develop
-                  :target: http://travis-ci.org/saxix/django-db-logging/
+.. |dev-build| image:: https://api.travis-ci.com/saxix/django-db-logger.png?branch=develop
+                  :target: http://travis-ci.com/saxix/django-db-logging/
 
 .. |dev-cov| image:: https://codecov.io/gh/saxix/django-db-logger/branch/develop/graph/badge.svg
                     :target: https://codecov.io/gh/saxix/django-db-logging
