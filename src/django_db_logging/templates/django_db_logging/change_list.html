@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_static admin_list admin_urls %}
+{% block extrahead %}{{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "django_db_logging/style.css" %}">
+{% endblock %}
+{% block object-tools-items %}
+{{ block.super }}
+{% include "django_db_logging/includes/change_list_buttons.html" %}
+{% endblock %}
+
+{% block pagination %}
+{% if cl.page_num == 0 %}
+    Prev
+{% else %}
+    <a href="{{ cl.get_query_string }}&p={{ cl.page_num|add:-1 }}">Prev</a>
+{% endif %}
+
+{% if cl.page_num > 20 or not cl.result_list %}
+    Next
+{% else %}
+    <a href="{{ cl.get_query_string }}&p={{ cl.page_num|add:1 }}">Next</a>
+{% endif %}
+{% endblock %}
