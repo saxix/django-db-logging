@@ -22,7 +22,7 @@ lint:
 
 
 clean:
-	rm -fr ${BUILDDIR} dist *.egg-info .coverage coverage.xml .eggs .pytest_cache
+	rm -fr ${BUILDDIR} dist *.egg-info .coverage coverage.xml .eggs .pytest_cache dist
 	find src -name __pycache__ -o -name "*.py?" -o -name "*.orig" -prune | xargs rm -rf
 	find tests -name __pycache__ -o -name "*.py?" -o -name "*.orig" -prune | xargs rm -rf
 
