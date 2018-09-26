@@ -12,7 +12,8 @@ exclude tox.ini
 
 recursive-include docs *
 recursive-include src/requirements *.pip
-recursive-include src/django_db_logger *
+recursive-include src/django_db_logging *
 
 prune tests
+prune docs
 prune .github
