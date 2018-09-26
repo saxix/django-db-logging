@@ -27,7 +27,7 @@ clean:
 	find tests -name __pycache__ -o -name "*.py?" -o -name "*.orig" -prune | xargs rm -rf
 
 fullclean:
-	rm -fr .tox .cache .venv .pytest_cache src/django_db_logger.egg-info
+	rm -fr .tox .cache .venv .pytest_cache src/django_db_logging.egg-info
 	$(MAKE) clean
 
 
