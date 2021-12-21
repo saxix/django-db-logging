@@ -10,6 +10,7 @@
 .venv
 .tox
 /dist
+/build
 /media
 __pycache__
 CACHE

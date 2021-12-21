@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import datetime
 import json
 import logging
@@ -7,8 +6,9 @@ import sys
 import traceback
 from logging import LogRecord
 
-from django.db import models, connections
+from django.db import connections, models
 from django.db.transaction import atomic
+
 from django_db_logging.handlers import DBHandler
 
 from .logging import logger

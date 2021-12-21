@@ -1,28 +1,30 @@
 import json
 
-import pytest
 from django.urls import reverse
 
+import pytest
 from django_db_logging.models import Record
 
 
 @pytest.fixture(autouse=True)
 def log1(db):
     return Record.objects.create(message='test-line1',
-                                        extra=json.dumps({"a": 1}))
+                                 extra=json.dumps({"a": 1}))
+
 
 @pytest.fixture(autouse=True)
 def log2(db):
     return Record.objects.create(message='test-line2', extra=None)
 
 
-
+@pytest.mark.django_db
 def test_admin(django_app, admin_user):
     url = reverse("admin:django_db_logging_record_changelist")
     res = django_app.get(url, user=admin_user)
     assert res.status_code == 200
 
 
+@pytest.mark.django_db
 def test_admin_detail(django_app, admin_user, log1, log2):
     url = reverse("admin:django_db_logging_record_change", args=[log1.pk])
     res = django_app.get(url, user=admin_user)
@@ -33,13 +35,16 @@ def test_admin_detail(django_app, admin_user, log1, log2):
     assert res.status_code == 200
 
 
+@pytest.mark.django_db
 def test_admin_buttons_test(django_app, admin_user):
     url = reverse("admin:django_db_logging_record_changelist")
     res = django_app.get(url, user=admin_user)
+    res.showbrowser()
     res = res.click("Test").follow()
     assert res.status_code == 200
 
 
+@pytest.mark.django_db
 def test_admin_buttons_empty(django_app, admin_user):
     url = reverse("admin:django_db_logging_record_changelist")
     res = django_app.get(url, user=admin_user)
@@ -48,6 +53,7 @@ def test_admin_buttons_empty(django_app, admin_user):
     assert res.status_code == 200
 
 
+@pytest.mark.django_db
 def test_admin_buttons_cleanup(django_app, admin_user):
     url = reverse("admin:django_db_logging_record_changelist")
     res = django_app.get(url, user=admin_user)

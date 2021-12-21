@@ -1,0 +1,24 @@
+{% extends "admin_extra_urls/change_list.html" %}
+{% load i18n static admin_list admin_urls %}
+{% block extrahead %}
+{{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "django_db_logging/style.css" %}">
+{% endblock %}
+
+
+{% block pagination %}
+
+	{% if cl.page_num == 1 %}
+	    Prev
+	{% else %}
+	    <a href="{{ cl.get_query_string }}&p={{ cl.page_num|add:-1 }}">Prev</a>
+	{% endif %}
+
+	{% if not cl.next_page %}
+	    Next
+	{% else %}
+	    <a href="{{ cl.get_query_string }}&p={{ cl.page_num|add:1 }}">Next</a>
+	{% endif %}
+
+{% endblock %}
+
