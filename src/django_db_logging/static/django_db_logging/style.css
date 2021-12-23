@@ -4,15 +4,22 @@
         color: white;
         text-align: center;
         width: 70px;
+        border-radius: 4px;
     }
-    .ERROR, .CRITICAL {
+    .CRITICAL {
+        background-color: black;
+    }
+    .ERROR {
         background-color: #d93f0b;
     }
     .WARNING {
         background-color: #fbca04;
+                color: black;
     }
     .INFO {
         background-color: #bfd4f2;
+                color: black;
+
     }
     .DEBUG {
         background-color: grey;

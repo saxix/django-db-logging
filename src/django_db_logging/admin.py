@@ -1,5 +1,7 @@
 import logging
 
+from admin_extra_urls.api import button, ExtraUrlMixin
+from admin_extra_urls.mixins import _confirm_action
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.templatetags.admin_urls import admin_urlname
@@ -9,8 +11,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.html import format_html
 
-from admin_extra_urls.api import ExtraUrlMixin, button
-from admin_extra_urls.mixins import _confirm_action
 from django_db_logging.handlers import DBHandler
 from django_db_logging.settings import config
 
@@ -34,7 +34,7 @@ class CustomChangeList(ChangeList):
             result_list = ()
 
         self.full_result_count = 0
-        self.result_count = 0
+        self.result_count = paginator.count
         self.result_list = result_list
         self.can_show_all = False
         self.multi_page = True
@@ -46,8 +46,9 @@ class CustomChangeList(ChangeList):
 class RecordAdmin(ExtraUrlMixin, ModelAdmin):
     list_display = ('timestamp', 'lvl', 'logger', 'message', 'exception')
     list_filter = ('timestamp', 'level',)
-    search_fields = ('logger', )
+    search_fields = ('logger',)
     date_hierarchy = 'timestamp'
+    show_full_result_count = False
 
     def has_add_permission(self, request):
         return False
@@ -95,6 +96,7 @@ class RecordAdmin(ExtraUrlMixin, ModelAdmin):
         opts = self.model._meta
         logger = logging.getLogger('django_db_logging_test_logger')
         logger.propagate = False
+        logger.setLevel(logging.INFO)
 
         handler = DBHandler()
         formatter = logging.Formatter('%(extra_param)s : %(message)s')
