@@ -5,6 +5,7 @@ from time import sleep
 from unittest.mock import Mock
 
 import pytest
+
 from django_db_logging.handlers import AsyncDBHandler, DBHandler
 from django_db_logging.models import Record
 from django_db_logging.settings import config

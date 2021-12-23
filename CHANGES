@@ -1,8 +1,20 @@
-Release 0.4
+Release 0.6
 -----------
 * Add support to python 3.9, 3.10
 * Add support to django 3.2, 4.0
 * Updated to django-admin-extra-urls
+
+
+Release 0.5
+-----------
+* updates migrations
+
+
+Release 0.4
+-----------
+* Fixes records count
+* Fixes test button
+* updates css
 
 
 Release 0.3

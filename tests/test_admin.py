@@ -1,8 +1,8 @@
 import json
 
+import pytest
 from django.urls import reverse
 
-import pytest
 from django_db_logging.models import Record
 
 
