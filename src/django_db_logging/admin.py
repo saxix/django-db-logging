@@ -1,17 +1,19 @@
-# -*- coding: utf-8 -*-
 import logging
 
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
-
-from admin_extra_urls.extras import ExtraUrlMixin, link
-from admin_extra_urls.mixins import _confirm_action
+from django.contrib.admin.templatetags.admin_urls import admin_urlname
 from django.contrib.admin.views.main import ChangeList
-from django.core.paginator import Paginator, InvalidPage
+from django.core.paginator import InvalidPage, Paginator
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.utils.html import format_html
 
+from admin_extra_urls.api import ExtraUrlMixin, button
+from admin_extra_urls.mixins import _confirm_action
 from django_db_logging.handlers import DBHandler
 from django_db_logging.settings import config
+
 from .models import Record
 
 
@@ -22,19 +24,22 @@ class PlainPaginator(Paginator):
 
 
 class CustomChangeList(ChangeList):
+
     def get_results(self, request):
+        super().get_results(request)
         paginator = PlainPaginator(self.queryset, self.list_per_page)
         try:
-            result_list = paginator.page(self.page_num + 1).object_list
+            result_list = paginator.page(self.page_num).object_list
         except InvalidPage:  # pragma: no cover
             result_list = ()
 
-        self.full_result_count = "~"
-        self.result_count = "~"
+        self.full_result_count = 0
+        self.result_count = 0
         self.result_list = result_list
         self.can_show_all = False
         self.multi_page = True
         self.paginator = paginator
+        self.next_page = len(result_list) == self.list_per_page
 
 
 @admin.register(Record)
@@ -43,14 +48,18 @@ class RecordAdmin(ExtraUrlMixin, ModelAdmin):
     list_filter = ('timestamp', 'level',)
     search_fields = ('logger', )
     date_hierarchy = 'timestamp'
-    change_list_template = 'django_db_logging/change_list.html'
-    change_form_template = 'django_db_logging/change_form.html'
 
     def has_add_permission(self, request):
         return False
 
     def get_changelist(self, request, **kwargs):
         return CustomChangeList
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def lvl(self, instance):
         level = instance.get_level_display()
@@ -62,15 +71,16 @@ class RecordAdmin(ExtraUrlMixin, ModelAdmin):
     exception.short_description = 'Exception'
     exception.boolean = True
 
-
-    @link(label='Cleanup')
+    @button(label='Cleanup')
     def cleanup(self, request):
+        opts = self.model._meta
         self.model.objects.cleanup()
         self.message_user(request, "Log cleaned")
+        return HttpResponseRedirect(reverse(admin_urlname(opts, 'changelist')))
 
-    @link(label='Empty Log', css_class="btn btn-danger",
-          permission=lambda *a: config.ALLOW_TRUNCATE,
-          icon="icon-trash icon-white")
+    @button(label='Empty Log',
+            permission=lambda *a: config.ALLOW_TRUNCATE,
+            icon="icon-trash icon-white")
     def empty_log(self, request):
         def _action(request):
             self.model.objects.truncate()
@@ -78,10 +88,11 @@ class RecordAdmin(ExtraUrlMixin, ModelAdmin):
         return _confirm_action(self, request, _action,
                                "Confirm deletion whole error log",
                                "Successfully executed",
-                               template='django_db_logging/confirm.html', )
+                               template='admin/django_db_logging/confirm.html', )
 
-    @link(permission=lambda *a: config.ENABLE_TEST_BUTTON)
+    @button(permission=lambda *a: config.ENABLE_TEST_BUTTON)
     def test(self, request):
+        opts = self.model._meta
         logger = logging.getLogger('django_db_logging_test_logger')
         logger.propagate = False
 
@@ -99,6 +110,8 @@ class RecordAdmin(ExtraUrlMixin, ModelAdmin):
         logger.info("DBLogger [INFO] test log entry", extra=extra)
 
         try:
-            raise Exception("DBLogger [EXCEPTION] test log entry")
-        except Exception as e:
+            raise BaseException("DBLogger [EXCEPTION] test log entry")
+        except BaseException as e:
             logger.exception(e, extra=extra)
+
+        return HttpResponseRedirect(reverse(admin_urlname(opts, 'changelist')))

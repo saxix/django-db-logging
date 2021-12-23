@@ -1,19 +1,22 @@
 import logging
 from unittest import mock
 
+import pytest
 from django_db_logging.handlers import DBHandler
-
 from django_db_logging.models import Record
+
 
 class DebugHandler(logging.Handler):
     records = []
+
     def emit(self, record):
         self.records.append(record)
 
 
+@pytest.mark.django_db
 def test_exception(db):
     Record.objects.all().delete()
-    debugger =DebugHandler()
+    debugger = DebugHandler()
     logger = logging.getLogger('django_db_logging')
 
     logger.handlers = []
