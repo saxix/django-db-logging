@@ -2,6 +2,7 @@ import logging
 from unittest import mock
 
 import pytest
+
 from django_db_logging.handlers import DBHandler
 from django_db_logging.models import Record
 
