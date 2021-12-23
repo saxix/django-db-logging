@@ -36,10 +36,11 @@ setup(
     author_email='s.apostolico@gmail.com',
     license="MIT",
     description='Database logging handler with Django integration',
+    full_description=open("README.rst").read(),
     package_dir={'': 'src'},
     packages=find_packages('src'),
     include_package_data=True,
-    install_requires=["admin-extra-urls"],
+    install_requires=["django-admin-extra-urls"],
     tests_require=tests_requires,
     extras_require={
         'test': tests_requires,
@@ -48,11 +49,12 @@ setup(
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 1.11',
-        'Framework :: Django :: 2.0',
-        'Framework :: Django :: 2.1',
+        'Framework :: Django :: 3.2',
+        'Framework :: Django :: 4.0',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Intended Audience :: Developers'
     ]
 )

@@ -1,3 +1,10 @@
+Release 0.4
+-----------
+* Add support to python 3.9, 3.10
+* Add support to django 3.2, 4.0
+* Updated to django-admin-extra-urls
+
+
 Release 0.3
 -----------
 * Fixes MANIFEST

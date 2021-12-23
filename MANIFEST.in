@@ -9,6 +9,7 @@ exclude manage.py
 exclude .gitignore
 exclude Makefile
 exclude tox.ini
+exclude .pre-commit-config.yaml
 
 recursive-include docs *
 recursive-include src/requirements *.pip

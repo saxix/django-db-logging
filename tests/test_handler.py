@@ -5,9 +5,9 @@ from time import sleep
 from unittest.mock import Mock
 
 import pytest
-from django_db_logging.settings import config
 from django_db_logging.handlers import AsyncDBHandler, DBHandler
 from django_db_logging.models import Record
+from django_db_logging.settings import config
 
 logger = logging.getLogger('test')
 logger.setLevel(logging.DEBUG)
@@ -20,6 +20,7 @@ logger.setLevel(logging.DEBUG)
                                             ("critical", logging.CRITICAL),
                                             ("exception", logging.ERROR)])
 @pytest.mark.parametrize("handler", [DBHandler, AsyncDBHandler])
+@pytest.mark.django_db
 def test_handlers(db, handler, level, expected):
     for hdlr in logger.handlers[:]:  # remove all old handlers
         logger.removeHandler(hdlr)
@@ -35,6 +36,7 @@ def test_handlers(db, handler, level, expected):
 
 
 @pytest.mark.parametrize("handler", [DBHandler, AsyncDBHandler])
+@pytest.mark.django_db
 def test_handlers_exception(db, handler):
     logger.addHandler(handler())
 
